@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import ItemForm
 from django.contrib import messages
-from .models import Item, SwapRequest # SwapRequest yahan import karna zaroori hai
+from .models import Item, SwapRequest 
 
 @login_required(login_url='/users/register/')
 def add_item_view(request):
@@ -24,7 +24,6 @@ def add_item_view(request):
 
 def item_list_view(request):
     query = request.GET.get('q') 
-    # Sirf wahi items jo swap nahi huye (is_swapped=False)
     base_items = Item.objects.filter(is_swapped=False)
     
     if query:
@@ -39,7 +38,6 @@ def item_list_view(request):
 
 def item_detail_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
-    # Check karna ki current user ne pehle hi request toh nahi bheji
     has_requested = False
     if request.user.is_authenticated:
         has_requested = SwapRequest.objects.filter(item=item, sender=request.user).exists()
@@ -79,7 +77,6 @@ def update_request_status(request, req_id, new_status):
             item.is_swapped = True
             item.save()
             
-            # PRO MOVE: Reject all other pending requests for this specific item
             item.requests.filter(status='pending').exclude(id=req_id).update(status='rejected')
             
             messages.success(request, f"Deal Fixed! Item is now off the market.")
@@ -101,13 +98,11 @@ def send_swap_request(request, item_id):
 
 @login_required
 def my_listings_view(request):
-    # Sirf wahi items jo current user ne post kiye hain
     items = Item.objects.filter(owner=request.user).order_by('-created_at')
     return render(request, 'exchange/my_listings.html', {'items': items})
 
 @login_required
 def delete_item_view(request, pk):
-    # Sirf wahi item dhundo jo current user ka hai
     item = get_object_or_404(Item, pk=pk, owner=request.user)
     
     if request.method == 'POST':
@@ -117,7 +112,6 @@ def delete_item_view(request, pk):
         messages.success(request, f"Item '{item_title}' has been deleted!")
         return redirect('my_listings')
     
-    # Agar koi seedha URL hit kare toh wapas bhej do
     return redirect('my_listings')
 
 def home_view(request):

@@ -6,7 +6,6 @@ class User(AbstractUser):
         ('individual', 'Individual'),
         ('ngo', 'NGO Partner'),
     ]
-    # Default is now 'individual' for a smoother signup
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='individual')
     location = models.CharField(max_length=255, blank=True)
     sustainability_interests = models.TextField(blank=True)

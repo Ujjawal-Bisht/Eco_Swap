@@ -13,13 +13,9 @@ def register_view(request):
         email = request.POST.get('email')
         pwd = request.POST.get('password')
         role = request.POST.get('role')
-        
-        # 1. Check if username exists (Prevents IntegrityError)
         if User.objects.filter(username=u_name).exists():
             messages.error(request, f"Username '{u_name}' is already taken. Please try another one!")
             return render(request, 'users/register.html')
-        
-        # 2. Create Custom User
         try:
             user = User.objects.create_user(
                 username=u_name, 
@@ -37,7 +33,6 @@ def register_view(request):
 
 @login_required
 def profile_view(request):
-    # --- Image Upload Logic ---
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -46,8 +41,6 @@ def profile_view(request):
             return redirect('profile')
     else:
         form = ProfileUpdateForm(instance=request.user)
-
-    # --- Data Fetching Logic ---
     user_items = Item.objects.filter(owner=request.user).order_by('-created_at')
     user_stories = SuccessStory.objects.filter(user=request.user).order_by('-created_at')
     swaps_completed = Item.objects.filter(owner=request.user, is_swapped=True).count()

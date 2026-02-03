@@ -17,7 +17,6 @@ class Item(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
-    # YE LINE ADD KI HAI:
     is_swapped = models.BooleanField(default=False) 
     image = models.ImageField(upload_to='item_images/', blank=True, null=True)
 
@@ -32,10 +31,8 @@ class SwapRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     meeting_center = models.ForeignKey('centers.Center', on_delete=models.SET_NULL, null=True, blank=True)
     
-    # --- NEW FIELDS FOR THE HANDSHAKE ---
     owner_agreed_location = models.BooleanField(default=False)
     sender_agreed_location = models.BooleanField(default=False)
-    # ------------------------------------
 
     def __str__(self):
         return f"{self.sender.username} wants {self.item.title}"

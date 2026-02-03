@@ -21,14 +21,12 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // Initialize map with center on Delhi
-    var map = L.map('map').setView([28.6139, 77.2090], 11);
+    var map = L.map('map').setView([28.6139, 77.2090], 11); //Delhi Center
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Loop through centers passed from Django view
     {% for center in centers %}
         L.marker([{{ center.latitude }}, {{ center.longitude }}])
             .addTo(map)
