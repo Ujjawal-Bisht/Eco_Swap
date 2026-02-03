@@ -17,7 +17,7 @@
       <td style="padding: 15px"><strong>{{ req.item.title }}</strong></td>
       <td style="padding: 15px">{{ req.sender.username }}</td>
       <td style="padding: 15px">
-        <span style="text-transform: capitalize; font-weight: bold; color: {% if req.status == 'accepted' %}#28a745{% elif req.status == 'rejected' %}#dc3545{% else %}#ffc107{% endif %}">
+        <span style="text-transform: capitalize; font-weight: bold; color: {% if req.status == 'accepted' %}#28a745{% elif req.status == 'rejected' %}#dc3545{% elif req.status == 'completed' %}#ffc107{% else %}#6c757d{% endif %}">
           {{ req.status }}
         </span>
       </td>
@@ -25,10 +25,13 @@
         {% if req.status == 'pending' %}
           <a href="{% url 'update_status' req.id 'accepted' %}" style="color: white; background: #28a745; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 14px; margin-right: 5px;">Accept</a>
           <a href="{% url 'update_status' req.id 'rejected' %}" style="color: white; background: #dc3545; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 14px;">Reject</a>
-        {% elif req.status == 'accepted' %}
+        {% elif req.status == 'accepted' or req.status == 'completed' %}
           <a href="{% url 'chat:chat_room' req.id %}" style="background: #2d5a27; color: white; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
             💬 Chat with {{ req.sender.username }}
             <span id="badge-{{ req.id }}"></span> </a>
+          {% if req.status == 'completed' %}
+            <span style="color: #ffc107; font-weight: 700; margin-left: 8px;">Completed</span>
+          {% endif %}
         {% else %}
           <span style="color: #888; font-style: italic">Rejected</span>
         {% endif %}
@@ -60,10 +63,13 @@
         </span>
       </td>
       <td style="padding: 15px">
-        {% if req.status == 'accepted' %}
+        {% if req.status == 'accepted' or req.status == 'completed' %}
           <a href="{% url 'chat:chat_room' req.id %}" style="background: #2d5a27; color: white; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
             💬 Open Chat
             <span id="badge-{{ req.id }}"></span> </a>
+          {% if req.status == 'completed' %}
+            <span style="color:#2d5a27; font-weight:700; margin-left:8px;">Completed</span>
+          {% endif %}
         {% elif req.status == 'rejected' %}
           <span style="color: #999">Better luck next time!</span>
         {% else %}
