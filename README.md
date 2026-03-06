@@ -1,85 +1,214 @@
-# 🌍 EcoSwap: Community-Driven Circular Marketplace
+# 🌍 EcoSwap — Community-Driven Circular Marketplace
 
-**EcoSwap** is a full-stack Django application designed to reduce waste by facilitating a direct "Give-and-Take" economy. The platform enables users to list underutilized assets and connect with others for local swaps, directly supporting environmental sustainability goals.
+**EcoSwap** is a full-stack web application built with **Django** that promotes sustainable living by enabling users to **exchange or donate reusable household items** instead of discarding them.
+The platform creates a **community-driven circular marketplace**, reducing waste and encouraging responsible consumption.
 
----
-
-## 🚀 Key Features
-
-* **Real-time Interaction Engine**: A robust `SwapRequest` system allowing users to signal interest and message owners directly.
-* **Automated Inventory Management**: Once a swap is accepted, the item is automatically removed from the public gallery to prevent duplicate requests.
-* **Personalized Dashboards**: User-centric views for tracking 'Incoming' and 'Outgoing' requests with status updates (Pending/Accepted/Rejected).
+By connecting individuals who want to give away items with those who need them, EcoSwap helps **extend product lifecycles and minimize landfill waste**.
 
 ---
 
-## 🛠️ Tech Stack
+# 🚀 Key Features
 
-* **Backend**: Django 5.x (Python 3.11)
-* **Frontend**: HTML5, CSS3, JavaScript
-* **Database**: MySQL
-* **Version Control**: Git & GitHub
+### 🔁 Interactive Swap Request Workflow
+
+Users can send swap requests for listed items and communicate directly with item owners.
+Owners can **accept or reject requests**, enabling a structured and transparent exchange process.
+
+### 📦 Automated Inventory Control
+
+Once a swap request is accepted, the item is **automatically removed from the public listings** to prevent duplicate or conflicting requests.
+
+### 📊 Personalized User Dashboards
+
+Each user has a dashboard that displays:
+
+* Incoming swap requests
+* Outgoing requests
+* Request status updates *(Pending / Accepted / Rejected)*
+
+### 🗂️ Optimized Item Categorization
+
+Items can be listed under **7 structured categories**:
+
+* Electronics
+* Furniture
+* Books
+* Clothing
+* Toys
+* Kitchenware
+* General
+
+This ensures easier discovery and browsing.
+
+### 🔐 Secure Authentication System
+
+Django's built-in authentication system ensures:
+
+* Secure password hashing
+* Protected login sessions
+* Access control for user actions
 
 ---
 
-## 💻 Local Setup & Installation
+# 🛠️ Technology Stack
 
-Follow these steps to run the project locally in your environment (e.g., IntelliJ):
+### Backend
 
-1. **Clone the repository**:
-   ```bash
-   git clone [https://github.com/Ujjawal-Bisht/MarketPlace-1](https://github.com/Ujjawal-Bisht/MarketPlace-1)
-   ```
+* **Django 5.x**
+* Python 3.11
+* MVC-based architecture
+* Built-in authentication and ORM
 
-2. Initialize Virtual Environment
-Create and activate a virtual environment to keep dependencies isolated:
+### Frontend
 
-### Create the environment
+* Semantic **HTML5**
+* **CSS3**
+* Django Template Engine
+* Responsive UI structure
+
+### Database
+
+* **SQLite3 (Relational Database)**
+  Used for efficient development and lightweight deployment.
+
+### Development Tools
+
+* **Git & GitHub** — Version control
+* **VS Code / IntelliJ** — Development environment
+
+---
+
+# 🏗️ System Workflow
+
+1. User registers or logs into the platform
+2. User lists an item under a category
+3. Other users browse available items
+4. Interested users send a **swap request**
+5. Item owner reviews the request
+6. Owner accepts or rejects the request
+7. If accepted, the item is **removed from public listings**
+
+---
+
+# 💻 Local Setup & Installation
+
+Follow these steps to run EcoSwap locally.
+
+---
+
+## 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/riyasharma-coder/MarketPlace.git
+cd MarketPlace
 ```
+
+---
+
+## 2️⃣ Create a Virtual Environment
+
+Create a virtual environment to isolate project dependencies.
+
+```bash
 python -m venv venv
 ```
 
-### Activate it (Windows)
+### Activate Environment
+
+**Windows**
+
 ```
 venv\Scripts\activate
 ```
 
-### Activate it (Mac/Linux)
+**Mac / Linux**
+
 ```
 source venv/bin/activate
 ```
 
-3. Install Dependencies
-Install the required Django framework:
+---
 
-```
-pip install requirements.txt
+## 3️⃣ Install Dependencies
+
+Install Django:
+
+```bash
+pip install django
 ```
 
-4. Apply Database Migrations
-Set up your local SQLite database based on the project models:
+*(Optional improvement)*
 
+```bash
+pip install -r requirements.txt
 ```
+
+---
+
+## 4️⃣ Apply Database Migrations
+
+Initialize the SQLite database.
+
+```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-5. Launch the Development Server
+---
 
-Start the local server:
-```
+## 5️⃣ Run the Development Server
+
+```bash
 python manage.py runserver
 ```
-Once running, open your browser and go to http://127.0.0.1:8000/ to view the app.
 
-6. Create a Superuser (Admin) To access the Django Admin panel and manage categories or users:
+Open your browser and visit:
+
 ```
+http://127.0.0.1:8000/
+```
+
+---
+
+## 6️⃣ Create an Admin Account
+
+To access the Django Admin panel:
+
+```bash
 python manage.py createsuperuser
 ```
 
-## Team:
+Admin panel URL:
 
-[Shraddha] (https://github.com/shraddha1603) <br>
-[Ujjawal Bisht] (https://github.com/Ujjawal-Bisht/)<br>
-[Riya] (https://github.com/riyasharma-coder)<br>
-[Shivani Sisodiya] (https://github.com/ShivaniRSisodiya)<br>
-[Parineet] (https://github.com/Parineet0509)
+```
+http://127.0.0.1:8000/admin
+```
+
+---
+
+# 📈 Future Improvements
+
+* Geolocation based item discovery
+* Real-time notifications for swap requests
+* Mobile-friendly progressive web app
+* AI-based item recommendation system
+* Integration with recycling centers and NGOs
+
+---
+
+# 🤝 Contributors
+
+* Shraddha(https://github.com/shraddha1603)
+* Ujjawal Bisht(https://github.com/Ujjawal-Bisht)
+* Riya Sharma(https://github.com/riyasharma-coder/)
+* Shivani Sisodiya(https://github.com/ShivaniRSisodiya)
+* Parineet Verma(https://github.com/Parineet0509)
+
+
+**Inderprastha Engineering College, Ghaziabad**
+
+---
+
+# 🌱 Impact
+
+EcoSwap encourages a **circular economy** by enabling communities to reuse items instead of discarding them, reducing environmental waste and promoting sustainable consumption.
