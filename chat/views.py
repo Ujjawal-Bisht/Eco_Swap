@@ -9,6 +9,7 @@ from centers.models import Center
 
 @login_required
 def chat_room(request, swap_id):
+    
     swap = get_object_or_404(SwapRequest, id=swap_id, status__in=['accepted', 'completed'])
 
     if request.user != swap.sender and request.user != swap.item.owner:
@@ -21,7 +22,7 @@ def chat_room(request, swap_id):
             if center_id:
                 new_center = get_object_or_404(Center, id=center_id)
                 swap.meeting_center = new_center
-
+                
                 swap.owner_agreed_location = False
                 swap.sender_agreed_location = False
                 swap.save()
