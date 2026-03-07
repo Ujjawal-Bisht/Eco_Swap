@@ -1,18 +1,19 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Load environment variables
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-64qmnwj83vdhk*x-@(k#5wx5@g=q%jd0*fg^l=r$u&9_8-qp*b'
+# SECURITY
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
-
-# Application definition
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ".onrender.com,localhost,127.0.0.1").split(",")
+# APPLICATIONS
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -20,19 +21,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-party apps
     'rest_framework',
     'corsheaders',
-    'users',      # Module 1
-    'exchange',   # Module 2 & 4
-    'centers',    # Module 3
-    'community',  # Module 5
+
+    # Project apps
+    'users',
+    'exchange',
+    'centers',
+    'community',
     'chat',
 ]
 
+# MIDDLEWARE
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # Correctly placed
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -42,10 +48,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
+# TEMPLATES
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], 
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -60,27 +67,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# Database configuration (MySQL)
+# DATABASE
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ecoswap_db',
-        'USER': 'root',
-        'PASSWORD': 'admin12326', 
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
     }
 }
 
-# Custom User Model
+# AUTH USER MODEL
 AUTH_USER_MODEL = 'users.User'
 
-# Auth Redirects (Add these for better flow)
 LOGIN_REDIRECT_URL = 'item_list'
 LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
 
-# Password validation
+# PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -88,52 +94,32 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# INTERNATIONALIZATION
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+# STATIC FILES
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
-# Media files (User uploaded content like item photos & success stories)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# CORS setup for React/Frontend
-CORS_ALLOW_ALL_ORIGINS = True
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Email Configuration for Password Reset
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Development mode - prints to console
-# For production, use: 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your-email@gmail.com'
-# EMAIL_HOST_PASSWORD = 'your-app-password'
-
-# Password reset email settings
-DEFAULT_FROM_EMAIL = 'noreply@ecoswap.com'
-PASSWORD_RESET_TIMEOUT = 86400  # 24 hours in seconds
-
-
-# 1. Static Files Configuration (Confirming paths)
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-# STATIC_ROOT is used for production ('python manage.py collectstatic')
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# 2. Media files (User uploaded content)
-# Yeh URL browser mein images load karne ke liye use hoga
+# MEDIA FILES
 MEDIA_URL = '/media/'
-
-# Yeh folder aapke local computer (IntelliJ project) par images save karega
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# 3. Security Check for Media (Recommended for React/CORS)
-# Agar aap frontend se image upload kar rahe hain, toh ye headers help karenge
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS
+CORS_ALLOW_ALL_ORIGINS = os.getenv("CORS_ALLOW_ALL_ORIGINS") == "True"
+
+# DEFAULT FIELD
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# EMAIL SETTINGS
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
+# PASSWORD RESET
+PASSWORD_RESET_TIMEOUT = 86400
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

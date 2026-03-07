@@ -15,10 +15,8 @@ def chat_room(request, swap_id):
     if request.user != swap.sender and request.user != swap.item.owner:
         return redirect('dashboard')
 
-    # Handle all POST requests
     if request.method == 'POST' and swap.status != 'completed':
         
-        # 1. Update Meeting Center logic (Selection Phase)
         if 'center_id' in request.POST:
             center_id = request.POST.get('center_id')
             if center_id:
@@ -29,7 +27,6 @@ def chat_room(request, swap_id):
                 swap.sender_agreed_location = False
                 swap.save()
                 
-                # System message for the audit trail
                 Message.objects.create(
                     swap_request=swap,
                     sender=request.user,
@@ -40,7 +37,6 @@ def chat_room(request, swap_id):
                 swap.save()
             return redirect('chat:chat_room', swap_id=swap.id)
 
-        # 2. Handshake Agreement logic (Agreement Phase)
         if 'confirm_location' in request.POST:
             if request.user == swap.item.owner:
                 swap.owner_agreed_location = True
@@ -55,7 +51,6 @@ def chat_room(request, swap_id):
             )
             return redirect('chat:chat_room', swap_id=swap.id)
 
-        # 3. Finalize Swap logic (Completion Phase)
         if 'mark_swapped' in request.POST and request.user == swap.item.owner:
             swap.item.is_swapped = True
             swap.item.save()
@@ -69,7 +64,6 @@ def chat_room(request, swap_id):
             )
             return redirect('dashboard')
 
-        # 4. Standard Message sending
         content = request.POST.get('content')
         if content:
             Message.objects.create(
@@ -80,10 +74,8 @@ def chat_room(request, swap_id):
             )
             return redirect('chat:chat_room', swap_id=swap.id)
 
-    # Mark incoming messages as read
     swap.chat_messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
 
-    # Data for the template
     messages = swap.chat_messages.all().order_by('timestamp')
     all_centers = Center.objects.all()
 
@@ -93,7 +85,6 @@ def chat_room(request, swap_id):
         'centers': all_centers 
     })
 
-# --- API ENDPOINTS FOR NOTIFICATIONS ---
 
 @login_required
 def api_unread_count(request):

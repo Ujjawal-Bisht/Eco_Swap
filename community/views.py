@@ -14,7 +14,6 @@ def share_story_view(request):
         content = request.POST.get('content', '').strip()
         image = request.FILES.get('image')
         
-        # Validation
         errors = {}
         
         if not title:
@@ -30,10 +29,8 @@ def share_story_view(request):
             errors['content'] = 'Content must be at least 20 characters'
         
         if image:
-            # Validate file size (max 5MB)
             if image.size > 5 * 1024 * 1024:
                 errors['image'] = 'Image size must not exceed 5MB'
-            # Validate file type
             allowed_types = ['image/jpeg', 'image/png', 'image/gif']
             if image.content_type not in allowed_types:
                 errors['image'] = 'Only JPEG, PNG, and GIF images are allowed'
