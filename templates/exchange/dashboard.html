@@ -94,15 +94,15 @@
     React.useEffect(() => {
       const checkNotifications = async () => {
         try {
-          const response = await fetch('/chat/api/unread-counts/'); // Ensure this URL matches your urls.py
+          const response = await fetch('/chat/api/unread-counts/'); 
           const data = await response.json();
-          setCount(data[swapId] || 0); // Update count for this specific chat
+          setCount(data[swapId] || 0); 
         } catch (err) {
           console.error("Polling error:", err);
         }
       };
 
-      const interval = setInterval(checkNotifications, 5000); // Poll every 5 seconds
+      const interval = setInterval(checkNotifications, 5000); 
       checkNotifications();
       return () => clearInterval(interval);
     }, [swapId]);

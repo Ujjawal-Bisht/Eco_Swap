@@ -72,6 +72,39 @@
           font-weight: bold;
           color: #2d5a27;
         "
+        >{{ form.location.label }}</label
+      >
+      {{ form.location }} {% if form.location.errors %}<span
+        style="color: red; font-size: 12px"
+        >{{ form.location.errors.0 }}</span
+      >{% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px">
+      <label
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+          color: #2d5a27;
+        "
+        >{{ form.address.label }}</label
+      >
+      {{ form.address }}
+      
+      {% if form.address.errors %}<span style="color: red; font-size: 12px"
+        >{{ form.address.errors.0 }}</span
+      >{% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px">
+      <label
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+          color: #2d5a27;
+        "
         >{{ form.image.label }}</label
       >
       {{ form.image }}

@@ -1,254 +1,106 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
 
+{% block content %}
 <div style="max-width: 1100px; margin: auto; padding: 20px">
-  <div
-    style="
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 15px;
-    "
-  >
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
     <h2 style="color: #2d5a27; margin: 0">Available Items for Swap 🌿</h2>
-    <a
-      href="{% url 'add_item' %}"
-      style="
-        background: #2d5a27;
-        color: white;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      "
-    >
+    <a href="{% url 'add_item' %}" style="background: #2d5a27; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
       + List New Item
     </a>
   </div>
 
-  <div
-    style="
-      margin-bottom: 30px;
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    "
-  >
-    <form method="GET" action="" style="display: flex; gap: 10px">
-      <input
-        type="text"
-        name="q"
-        placeholder="Search by title (e.g., Physics Book)..."
-        value="{{ query|default:'' }}"
-        style="
-          flex: 1;
-          padding: 12px;
-          border: 1px solid #ddd;
-          border-radius: 6px;
-          outline: none;
-          font-size: 15px;
-        "
-      />
-      <button
-        type="submit"
-        style="
-          background: #2d5a27;
-          color: white;
-          border: none;
-          padding: 0 25px;
-          border-radius: 6px;
-          cursor: pointer;
-          font-weight: bold;
-        "
-      >
-        Search
+  <div style="margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
+    <form method="GET" action="" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end">
+      
+      <div style="flex: 1; min-width: 250px">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333; font-size: 14px;">Search Items</label>
+        <input type="text" name="q" placeholder="Search by title..." value="{{ query|default:'' }}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; font-size: 14px; box-sizing: border-box;" />
+      </div>
+
+      <div style="flex: 1; min-width: 200px">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333; font-size: 14px;">Category</label>
+        <select name="category" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; font-size: 14px; box-sizing: border-box;">
+          <option value="">All Categories</option>
+          {% for value, label in categories %}
+            <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="flex: 1; min-width: 200px">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333; font-size: 14px;">Location</label>
+        <select name="location" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; font-size: 14px; box-sizing: border-box;">
+          <option value="">All Locations</option>
+          {% for value, label in locations %}
+            <option value="{{ value }}" {% if selected_location == value %}selected{% endif %}>
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" style="background: #2d5a27; color: white; border: none; padding: 10px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px;">
+        🔍 Filter
       </button>
-      {% if query %}
-      <a
-        href="{% url 'item_list' %}"
-        style="
-          padding: 12px;
-          color: #666;
-          text-decoration: none;
-          border: 1px solid #ddd;
-          border-radius: 6px;
-        "
-        >Clear</a
-      >
+
+      {% if query or selected_category or selected_location %}
+        <a href="{% url 'item_list' %}" style="padding: 10px 20px; color: white; text-decoration: none; border-radius: 6px; background: #666; font-weight: bold; font-size: 14px; display: inline-block;">
+          ✕ Clear Filters
+        </a>
       {% endif %}
     </form>
   </div>
 
-  <div
-    style="
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
-    "
-  >
+  <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 5px; font-size: 13px; color: #2d5a27; margin-bottom: 20px;">
+    <strong>{{ items.count }}</strong> item{% if items.count != 1 %}s{% endif %} found
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
     {% for item in items %}
-    <div
-      style="
-        background: white;
-        border: 1px solid #eee;
-        border-radius: 12px;
-        overflow: hidden;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      "
-      onmouseover="
-        this.style.transform = 'translateY(-5px)';
-        this.style.boxShadow = '0 8px 15px rgba(0,0,0,0.1)';
-      "
-      onmouseout="
-        this.style.transform = 'translateY(0)';
-        this.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
-      "
-    >
-      <div
-        style="
-          width: 100%;
-          height: 200px;
-          background: #f0f0f0;
-          overflow: hidden;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        {% if item.image %}
-        <img
-          src="{{ item.image.url }}"
-          alt="{{ item.title }}"
-          style="width: 100%; height: 100%; object-fit: cover"
-        />
-        {% else %}
-        <span style="color: #ccc; font-size: 14px">No Image</span>
-        {% endif %}
-      </div>
+      <div style="background: white; border: 1px solid #eee; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.2s;">
+        <div style="width: 100%; height: 200px; background: #f0f0f0; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.title }}" style="width: 100%; height: 100%; object-fit: cover" />
+          {% else %}
+            <span style="color: #ccc; font-size: 14px">No Image</span>
+          {% endif %}
+        </div>
 
-      <div style="padding: 20px">
-        <span
-          style="
-            background: #e8f5e9;
-            color: #2d5a27;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          "
-        >
-          {{ item.get_category_display }}
-        </span>
+        <div style="padding: 20px">
+          <span style="background: #e8f5e9; color: #2d5a27; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase;">
+            {{ item.get_category_display }}
+          </span>
 
-        <h3 style="margin: 15px 0 10px 0; color: #1a1a1a; font-size: 1.25rem">
-          {{ item.title }}
-        </h3>
-        <p
-          style="
-            color: #666;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            height: 42px;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-          "
-        >
-          {{ item.description }}
-        </p>
+          <h3 style="margin: 15px 0 10px 0; color: #1a1a1a; font-size: 1.25rem">
+            {{ item.title }}
+          </h3>
+          
+          <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 20px; height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+            {{ item.description }}
+          </p>
 
-        <div
-          style="
-            border-top: 1px solid #f0f0f0;
-            padding-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <div style="display: flex; align-items: center; gap: 8px">
-            <div
-              style="
-                width: 24px;
-                height: 24px;
-                background: #2d5a27;
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 10px;
-                font-weight: bold;
-              "
-            >
-              {{ item.owner.username|slice:":1"|upper }}
+          <div style="border-top: 1px solid #f0f0f0; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px">
+              <div style="width: 24px; height: 24px; background: #2d5a27; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">
+                {{ item.owner.username|slice:":1"|upper }}
+              </div>
+              <span style="font-size: 13px; color: #444; font-weight: 500">{{ item.owner.username }}</span>
             </div>
-            <span style="font-size: 13px; color: #444; font-weight: 500"
-              >{{ item.owner.username }}</span
-            >
-          </div>
-          <button
-            style="
-              background: transparent;
-              border: 1.5px solid #2d5a27;
-              color: #2d5a27;
-              padding: 6px 12px;
-              border-radius: 6px;
-              font-size: 13px;
-              cursor: pointer;
-              font-weight: 600;
-            "
-          >
-            <a
-              href="{% url 'item_detail' item.pk %}"
-              style="
-                text-decoration: none;
-                border: 1.5px solid #2d5a27;
-                color: #2d5a27;
-                padding: 6px 12px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-              "
-            >
+            
+            <a href="{% url 'item_detail' item.pk %}" style="text-decoration: none; border: 1.5px solid #2d5a27; color: #2d5a27; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600;">
               View Details
             </a>
-          </button>
+          </div>
         </div>
       </div>
-    </div>
     {% empty %}
-    <div
-      style="
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 50px;
-        background: #fff;
-        border-radius: 12px;
-        border: 1px dashed #ccc;
-      "
-    >
-      <p style="font-size: 18px; color: #888">
-        No items found matching your search. 📦
-      </p>
-      <a
-        href="{% url 'item_list' %}"
-        style="color: #2d5a27; text-decoration: underline"
-        >Browse all items</a
-      >
-    </div>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 50px; background: #fff; border-radius: 12px; border: 1px dashed #ccc;">
+        <p style="font-size: 18px; color: #888">No items found matching your search. 📦</p>
+        <a href="{% url 'item_list' %}" style="color: #2d5a27; text-decoration: underline">Browse all items</a>
+      </div>
     {% endfor %}
   </div>
 </div>
-
 {% endblock %}

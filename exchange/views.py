@@ -23,17 +23,36 @@ def add_item_view(request):
     return render(request, 'exchange/add_item.html', {'form': form})
 
 def item_list_view(request):
-    query = request.GET.get('q') 
+    query = request.GET.get('q', '')
+    category = request.GET.get('category', '')
+    location = request.GET.get('location', '')
+    
+    # Start with items that haven't been swapped
     base_items = Item.objects.filter(is_swapped=False)
     
+    # Apply filters
     if query:
-        items = base_items.filter(title__icontains=query).order_by('-created_at')
-    else:
-        items = base_items.order_by('-created_at')
+        base_items = base_items.filter(title__icontains=query)
+    
+    if category:
+        base_items = base_items.filter(category=category)
+    
+    if location:
+        base_items = base_items.filter(location=location)
+    
+    items = base_items.order_by('-created_at')
+    
+    # Get unique categories and locations for filter dropdowns
+    categories = Item.CATEGORY_CHOICES
+    locations = Item.LOCATION_CHOICES
     
     return render(request, 'exchange/item_list.html', {
         'items': items,
-        'query': query
+        'query': query,
+        'selected_category': category,
+        'selected_location': location,
+        'categories': categories,
+        'locations': locations,
     })
 
 def item_detail_view(request, pk):

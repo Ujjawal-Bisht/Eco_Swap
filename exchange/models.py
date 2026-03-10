@@ -3,22 +3,43 @@ from django.conf import settings
 
 class Item(models.Model):
     CATEGORY_CHOICES = [
-        ('electronics', 'Electronics'),
-        ('furniture', 'Furniture'),
-        ('books', 'Books'),
-        ('clothing', 'Clothing'),
-        ('toys', 'Toys & Games'),  
-        ('kitchen', 'Kitchenware'), 
-        ('general', 'General / Other'),
+        ('electronics', '📱 Electronics & Tech'),
+        ('fashion', '👕 Fashion & Accessories'),
+        ('home', '🏠 Home & Furniture'),
+        ('fitness', '🏋️ Fitness & Sports'),
+        ('books', '📚 Books & Media'),
+        ('toys', '🎮 Toys & Games'),  
+        ('other', '✨ Other Items'),
+    ]
+
+    LOCATION_CHOICES = [
+        ('north', 'North Delhi'),
+        ('south', 'South Delhi'),
+        ('east', 'East Delhi'),
+        ('west', 'West Delhi'),
+        ('central', 'Central Delhi'),
+        ('ne', 'North-East Delhi'),
+        ('nw', 'North-West Delhi'),
+        ('se', 'South-East Delhi'),
+        ('sw', 'South-West Delhi'),
     ]
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    location = models.CharField(max_length=20, choices=LOCATION_CHOICES, default='central')
+    address = models.CharField(max_length=255, blank=True, help_text="Specific area/street (optional)")
     created_at = models.DateTimeField(auto_now_add=True)
     is_swapped = models.BooleanField(default=False) 
     image = models.ImageField(upload_to='item_images/', blank=True, null=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['category', 'location']),
+            models.Index(fields=['-created_at']),
+        ]
 
     def __str__(self):
         return self.title
