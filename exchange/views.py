@@ -85,9 +85,12 @@ def dashboard_view(request):
 
 @login_required
 def update_request_status(request, req_id, new_status):
-    swap_req = get_object_or_404(SwapRequest, id=req_id, item__owner=request.user)
+    swap_req = get_object_or_404(SwapRequest, id=req_id)
     
+    # Allow owner to accept/reject, and both parties to mark as completed
     if new_status in ['accepted', 'rejected']:
+        if swap_req.item.owner != request.user:
+            return redirect('dashboard')
         swap_req.status = new_status
         swap_req.save()
         
@@ -96,11 +99,18 @@ def update_request_status(request, req_id, new_status):
             item.is_swapped = True
             item.save()
             
-            item.requests.filter(status='pending').exclude(id=req_id).update(status='rejected')
-            
+            swap_req.item.requests.filter(status='pending').exclude(id=req_id).update(status='rejected')
             messages.success(request, f"Deal Fixed! Item is now off the market.")
         else:
             messages.info(request, "Request rejected. The item is still available for others.")
+            
+    elif new_status == 'completed':
+        # Allow both owner and sender to mark as completed
+        if request.user not in [swap_req.item.owner, swap_req.sender]:
+            return redirect('dashboard')
+        swap_req.status = new_status
+        swap_req.save()
+        messages.success(request, "Swap marked as completed!")
             
     return redirect('dashboard')
 
