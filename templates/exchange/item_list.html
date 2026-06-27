@@ -54,7 +54,7 @@
   </div>
 
   <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 5px; font-size: 13px; color: #2d5a27; margin-bottom: 20px;">
-    <strong>{{ items.count }}</strong> item{% if items.count != 1 %}s{% endif %} found
+    <strong>{{ items_count }}</strong> item{{ items_count|pluralize }} found
   </div>
 
   <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">

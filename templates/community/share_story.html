@@ -18,6 +18,7 @@
       <input
         type="text"
         name="title"
+        value="{{ title|default:'' }}"
         required
         style="
           width: 100%;
@@ -42,7 +43,7 @@
           border-radius: 5px;
           margin-top: 5px;
         "
-      ></textarea>
+      >{{ content|default:'' }}</textarea>
     </div>
 
     <div style="margin-bottom: 20px">

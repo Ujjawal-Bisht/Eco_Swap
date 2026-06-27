@@ -5,7 +5,7 @@
     <title>EcoSwap | Create Account</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0fdf4;
@@ -56,7 +56,7 @@
             transition: background 0.2s;
         }
         .btn-register:hover { background: #24491f; }
-        
+
         .server-message {
             background: #fef2f2;
             color: #dc2626;
@@ -82,33 +82,27 @@
         {% endfor %}
     {% endif %}
 
-    <form method="POST" onsubmit="validateForm(event)" novalidate>
+    <form method="POST" onsubmit="return validateForm(event)" novalidate>
         {% csrf_token %}
+        <input type="hidden" name="role" value="individual">
+
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Choose a unique username" required>
+            <input type="text" id="username" name="username" placeholder="Choose a unique username"
+                   value="{{ username|default:'' }}" required>
             <div class="error" id="username-error"></div>
         </div>
 
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            <input type="email" id="email" name="email" placeholder="you@example.com"
+                   value="{{ email|default:'' }}" required>
             <div class="error" id="email-error"></div>
         </div>
 
         <div class="form-group">
-            <label for="role">Role</label>
-            <select id="role" name="role" required>
-                <option value="">-- Select a Role --</option>
-                <option value="individual">Individual (Community Member)</option>
-                <option value="ngo">NGO Partner</option>
-            </select>
-            <div class="error" id="role-error"></div>
-        </div>
-
-        <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="At least 6 characters" required>
+            <input type="password" id="password" name="password" placeholder="At least 8 characters" required>
             <div class="error" id="password-error"></div>
         </div>
 
@@ -118,16 +112,13 @@
 
 <script>
     function validateForm(event) {
-        event.preventDefault();
-        
         const errorElements = document.querySelectorAll(".error");
         errorElements.forEach((el) => (el.textContent = ""));
-        const inputs = document.querySelectorAll("input, select");
+        const inputs = document.querySelectorAll("input");
         inputs.forEach((input) => input.classList.remove("invalid"));
 
         const username = document.getElementById("username").value.trim();
         const email = document.getElementById("email").value.trim();
-        const role = document.getElementById("role").value;
         const password = document.getElementById("password").value;
 
         let isValid = true;
@@ -142,19 +133,12 @@
             isValid = false;
         }
 
-        if (!role) {
-            showError("role-error", "Please select your role");
+        if (password.length < 8) {
+            showError("password-error", "Password must be at least 8 characters");
             isValid = false;
         }
 
-        if (password.length < 6) {
-            showError("password-error", "Password must be at least 6 characters");
-            isValid = false;
-        }
-
-        if (isValid) {
-            event.target.submit();
-        }
+        return isValid;
     }
 
     function showError(elementId, message) {

@@ -9,7 +9,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   "
 >
-  <a
+  
     href="{% url 'item_list' %}"
     style="text-decoration: none; color: #2d5a27; font-weight: bold"
     >← Back to Gallery</a
@@ -84,6 +84,21 @@
         >
           This is your listing.
         </p>
+        {% elif item.is_swapped %}
+        <div
+          style="
+            width: 100%;
+            margin-top: 15px;
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+          "
+        >
+          This item has already been swapped.
+        </div>
         {% elif has_requested %}
         <div
           style="
@@ -100,27 +115,30 @@
           ✅ Interest Sent
         </div>
         {% else %}
-        <a
-          href="{% url 'send_swap_request' item.id %}"
-          style="
-            display: block;
-            text-align: center;
-            text-decoration: none;
-            width: 100%;
-            margin-top: 15px;
-            background: #2d5a27;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
-          "
-        >
-          Send Interest / Message 📩
-        </a>
+        <form method="POST" action="{% url 'send_swap_request' item.id %}" style="margin-top: 15px;">
+          {% csrf_token %}
+          <button
+            type="submit"
+            style="
+              display: block;
+              text-align: center;
+              width: 100%;
+              background: #2d5a27;
+              color: white;
+              border: none;
+              padding: 12px;
+              border-radius: 8px;
+              font-size: 16px;
+              font-weight: bold;
+              cursor: pointer;
+              transition: background 0.3s;
+            "
+          >
+            Send Interest / Message 📩
+          </button>
+        </form>
         {% endif %} {% else %}
-        <a
+        
           href="{% url 'login' %}"
           style="
             display: block;

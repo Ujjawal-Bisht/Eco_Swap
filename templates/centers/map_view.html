@@ -9,6 +9,16 @@
         Find nearby locations to drop off E-waste, clothes, or donations.
     </p>
 
+    {% if error %}
+    <div style="background: #f8d7da; color: #721c24; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; font-weight: 600;">
+        ⚠️ {{ error }}
+    </div>
+    {% elif message %}
+    <div style="background: #fff3cd; color: #856404; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; font-weight: 600;">
+        ℹ️ {{ message }}
+    </div>
+    {% endif %}
+
     <div id="map" style="
         height: 550px; 
         border-radius: 20px; 
@@ -33,11 +43,11 @@
             .addTo(map)
             .bindPopup(`
                 <div style="min-width: 200px; padding: 5px;">
-                    <strong style="color: #2d5a27; font-size: 16px; display: block; margin-bottom: 4px;">{{ center.name }}</strong>
+                    <strong style="color: #2d5a27; font-size: 16px; display: block; margin-bottom: 4px;">{{ center.name|escapejs }}</strong>
                     <span style="display: inline-block; background: #f0f7f0; color: #2d5a27; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">
-                        {{ center.get_center_type_display }}
+                        {{ center.city|escapejs }}
                     </span>
-                    <p style="margin: 5px 0; color: #555; font-size: 14px;">📞 {{ center.contact_number }}</p>
+                    <p style="margin: 5px 0; color: #555; font-size: 14px;">📞 {{ center.contact_number|default:"N/A"|escapejs }}</p>
                     
                     <a href="https://www.google.com/maps/dir/?api=1&destination={{ center.latitude }},{{ center.longitude }}" 
                        target="_blank" 

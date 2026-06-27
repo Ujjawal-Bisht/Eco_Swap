@@ -17,8 +17,17 @@
     Please login to your EcoSwap account.
   </p>
 
+  {% if form.non_field_errors %}
+    <div style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; text-align: center;">
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <form method="POST" style="margin-top: 20px">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
 
     <div style="margin-bottom: 15px">
       <label
@@ -30,6 +39,7 @@
         type="text"
         name="username"
         id="username"
+        value="{{ form.username.value|default:'' }}"
         required
         style="
           width: 100%;
@@ -60,7 +70,7 @@
       />
     </div>
     <div style="text-align: right; margin-bottom: 20px">
-      <a
+      
         href="{% url 'password_reset' %}"
         style="color: #2e7d32; text-decoration: none; font-size: 14px"
         >Forgot Password?</a
@@ -89,7 +99,7 @@
   <div style="text-align: center">
     <p>
       Don't have an account?
-      <a
+      
         href="{% url 'register' %}"
         style="color: #2e7d32; text-decoration: none; font-weight: bold"
         >Register Here</a
